@@ -141,56 +141,5 @@ xlabel('Long Cone (R)');
 ylabel('Middle Cone (G)');
 zlabel('Short Cone (B)');
 exportgraphics(fig, "gene/cie_1931_plane.png", resolution = 900);
-%%
-% Calculate the projection coordinates
-% The plane: x+y+z = 1 -> The value of the constant actually doesn't
-% matter!
-% projected_rgb = [];
-% for i = 1:length(rgb)
-%     pt = rgb(i, :);
-%     pt = pt ./ sum(pt(:));
-%     projected_rgb = [projected_rgb; pt];
-% end
-projected_rgb = rgb ./ sum(rgb, 2);
-% rgb = rgb .* [7, 8, 1.5];
-fig = figure(color = 'w');
-hold on;
-scatter(rgb(:, 1) ./ sum(rgb, 2), rgb(:, 2) ./ sum(rgb, 2), 50, projected_rgb, 'filled');
-% subplot(2, 1, 1);
-% scatter(mean(projected_rgb(:, 1), 2), projected_rgb(:, 3), 50, projected_rgb, "filled");
-% axis image;
-% subplot(2, 1, 2);
-% img = ones([200, 200, 3]);
-% coord = projected_rgb;
-% coord = coord - min(coord, [], 1);
-% coord = int32(coord ./ max(coord,[], 1) * (length(img)-1))+1;
-% for i = 1:length(rgb)
-%     for ii = 1
-%     for mu = linspace(0, 1, 50)
-%         start_point = coord(ii, :);
-%         end_point = coord(i, :);
-%         mid_point = int32( start_point * (1-mu) + end_point * mu );
-%         img(mid_point(1), mid_point(3), :) = projected_rgb(1, :) * (1-mu) + projected_rgb(i, :) * mu;
-%     end
-%     end
-% end
-% imshow(permute(img, [2, 1, 3]));
-% axis xy;
-%% 
-x = 1.9*rgb(:, 1) - 1.1*rgb(:, 2) + 0.2*rgb(:, 3);
-y = .37*rgb(:, 1) + 0.63*rgb(:, 2);
 
-x = rgb(:, 1);
-y = rgb(:, 2);
-z = rgb(:, 3);
-subplot(2, 1, 1);
-scatter3(x , ...
-    y, ...
-    z,...
-    50, projected_rgb, 'filled')
-axis image;
-subplot(2, 1, 2);
-x = x ./ (x+y+z);
-y = y ./ (x+y+z);
-scatter(x, y, 30, projected_rgb);
-axis image;
+%%
