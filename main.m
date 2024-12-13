@@ -1,3 +1,6 @@
+%% Initialization
+mkdir('gene')
+
 %% Sensitivity of the Cones
 close all;
 red = makedist('normal', mu = 570, sigma = 50);

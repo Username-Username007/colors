@@ -5,6 +5,9 @@ from matplotlib import patches as mpatches, animation as manimation, patheffects
 import seaborn as sns
 from scipy import stats
 from scipy import interpolate
+import os
+# %% Initialization and functions
+os.makedirs('gene', exist_ok=True)
 # %% RGB and CMY
 
 fig = plt.figure(dpi = 600, layout = 'compressed')
