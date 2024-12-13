@@ -8,6 +8,23 @@ from scipy import interpolate
 import os
 # %% Initialization and functions
 os.makedirs('gene', exist_ok=True)
+
+class SignalFunction:
+    def __init__(self):
+        self.func = dict()
+        self.func['r'] = stats.norm(loc = 570, scale = 50)
+        self.func['g'] = stats.norm(loc = 540, scale = 40)
+        self.func['b'] = stats.norm(loc = 450, scale = 20)
+        pass
+    def __call__(self, color, wavelength):
+        c = color.lower()[0]
+        return self.func[c].pdf(wavelength) / self.func[c].pdf(self.func[c].mean())
+    def __getitem__(self, color):
+        return self.func[color.lower()[0]]
+
+signal_func = SignalFunction()
+
+assert 0, "The below are appendix that should be executed one at a time."
 # %% RGB and CMY
 
 fig = plt.figure(dpi = 600, layout = 'compressed')
@@ -136,23 +153,6 @@ for i in range(3):
     wl = (uni_x - 142) / (1074 - 142) * 300 + 400
     signal = (uni_y - 46) / (654 - 46) * -0.8 + 1
     signal_func[c[i]] = (interpolate.interp1d(wl, signal, kind = 'linear', fill_value='extrapolate', bounds_error=False))
-
-# %% Create con sensitivity functions by Normal core function
-
-class SignalFunction:
-    def __init__(self):
-        self.func = dict()
-        self.func['r'] = stats.norm(loc = 570, scale = 50)
-        self.func['g'] = stats.norm(loc = 540, scale = 40)
-        self.func['b'] = stats.norm(loc = 450, scale = 20)
-        pass
-    def __call__(self, color, wavelength):
-        c = color.lower()[0]
-        return self.func[c].pdf(wavelength) / self.func[c].pdf(self.func[c].mean())
-    def __getitem__(self, color):
-        return self.func[color.lower()[0]]
-
-signal_func = SignalFunction()
 
 # %% Create signal sensing animation
 n_frame = 24*10
