@@ -218,4 +218,47 @@ plt.title("Influence Lines of LMS")
 plt.grid(True)
 fig.savefig("gene/no_hyper_red_blue.png", transparent=False)
 
+# %% R+B = M
+n_frame = 24*10
+fps = 24
+fig = plt.figure(figsize = (3, 1), dpi = 200, layout = 'compressed', facecolor='k')
+    # DPI and the figsize here plays the fundamental role for the displaying quality!
+blue = np.zeros((100, 150, 4), dtype = np.uint8)
+red = np.zeros(blue.shape, np.uint8)
+row, col = np.meshgrid(np.arange(blue.shape[1]), np.arange(blue.shape[0]))
+
+blue[(np.mod(row+col, 2) == 0), 2] = 255
+blue[(np.mod(row+col, 2) == 0), 3] = 255
+
+red[np.mod(row+col, 2) == 1, 0] = 255
+red[np.mod(row+col, 2) == 1, 3] = 255
+
+# red[..., 3] = 255
+# blue[..., 3] = 255
+
+ax = plt.gca()
+img_r = plt.imshow(red, extent=(-0.5, 1, 0, 1))
+img_b = plt.imshow(blue, extent=(2, 3.5, 0, 1))
+
+plt.xlim(0, 3)
+plt.ylim(0, 1)
+plt.axis('off')
+ax.set_aspect('auto')
+ax.set_position((0, 0, 1, 1))
+
+def update(frame):
+    if(frame > n_frame/2):
+        img_r.set_extent((.5, 2, 0, 1))
+        img_b.set_extent((1, 2.5, 0, 1))
+
+        return [img_r, img_b]
+    frame *= 2
+    img_r.set_extent((-0.5+frame/n_frame, 1+frame/n_frame, 0, 1))
+    img_b.set_extent((2-frame/n_frame, 3.5-frame/n_frame, 0, 1))
+    return (img_r, img_b)
+
+ani = manimation.FuncAnimation(fig, update, frames = n_frame, interval = 1000/fps)
+
+ani.save("gene/r_and_b.gif", fps = fps)
+
 # %%
