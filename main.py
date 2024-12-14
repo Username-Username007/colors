@@ -1,7 +1,7 @@
 # %% Imports
 from matplotlib import pyplot as plt
 import numpy as np
-from matplotlib import patches as mpatches, animation as manimation, patheffects as mpe, collections as mcollections, path as mpath, patheffects as mpe
+from matplotlib import patches as mpatches, animation as manimation, patheffects as mpe, collections as mcollections, path as mpath, patheffects as mpe, gridspec as mgs
 import seaborn as sns
 from scipy import stats
 from scipy import interpolate, integrate
@@ -386,5 +386,57 @@ for axi, ax in enumerate(fig.subplots(1, 2)):
         t = plt.text(r*np.cos(hue[i]), r*np.sin(hue[i]), cn[i], c = tc[i], ha = 'center', va = 'center', path_effects = [mpe.withStroke(linewidth = 2, foreground = tgc[i])])
         # t.set_path_effects(, patheffects = [mpe.withStroke(linewidth = 3, foreground = 'w')])
 fig.savefig("gene/hsl_hsv.png", transparent=1)
+
+# %% Missing colors
+
+img = np.zeros((1000, 1000, 3), dtype = np.uint8)
+xx, yy = np.meshgrid(np.linspace(-1, 1, img.shape[1]), np.linspace(-1, 1, img.shape[0]))
+hue = np.arctan2(yy, xx)
+new_hue = hue
+new_hue[hue<0] += np.pi*2
+new_hue /= 2*np.pi
+sat = np.sqrt(xx**2 + yy**2)
+
+img_hsv = np.array([colorsys.hsv_to_rgb(h, 1, 1) for h, s in zip(new_hue.ravel(), sat.ravel())]).reshape(img.shape)*255
+
+img_hsv = img_hsv.astype(np.uint8)
+
+fig = plt.figure(dpi = 100, figsize = (4, 3))
+# gs = mgs.GridSpec(1, 10, fig)
+# ax = fig.add_subplot(gs[:, :7])
+ax = plt.gca()
+imgs = [img_hsl, img_hsv]
+cs = ['', ""]
+###
+hue = np.arange(0, 2*np.pi, np.pi/3)
+cn = ['R', 'Y', 'G', 'C', 'B', 'M']
+tc = ['k', 'w']*3
+tgc = ['w', 'k']*3
+axi = 0
+
+plt.sca(ax)
+ax.set_aspect('equal')
+ax.axis('off')
+plt.title(cs[axi])
+# art = plt.imshow(imgs[axi], extent=(-1, 1, -1, 1))
+art = plt.pcolormesh(xx, yy, imgs[axi])
+path = mpath.Path.circle((0, 0), 1)
+art.set_clip_path(path, transform = ax.transData)
+
+arc = mpatches.Wedge((0, 0), 1, theta1 = 0, theta2 = 360-60, facecolor = (0, 0, 0, .4), fill = False, edgecolor = 'k', lw = 3)
+ax.add_artist(arc)
+
+arc = mpatches.Wedge((.05, -.05), .95, theta1 = 360-60+2, theta2 = 360-2, facecolor = (1, 1, 1, .4), fill = False, edgecolor = 'k', lw = 3)
+ax.add_artist(arc)
+
+# ax.text(.5, 0, "Missing Colors", ha = 'center', va = 'bottom', fontsize = 12, path_effects = [mpe.withStroke(foreground = 'w', linewidth = 2)])
+
+ax.annotate("Missing Colors\n(Composite Light)", xy = (.5, -.5), xytext = (1.2, -.7), arrowprops=dict(arrowstyle = '<-'))
+
+ax.annotate("Single  Light", xy = (-.5, .5), xytext = (1.2, .5), arrowprops=dict(arrowstyle = '<-'))
+
+plt.xlim(-1.1, 2)
+plt.ylim(-1.1, 1.1)
+fig.savefig("gene/missing_colors.png", transparent=True)
 
 # %%
