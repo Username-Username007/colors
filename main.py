@@ -8,6 +8,9 @@ from scipy import interpolate, integrate
 import os
 # %% Initialization and functions
 os.makedirs('gene', exist_ok=True)
+plt.rcParams['mathtext.fontset'] = 'stix'
+plt.rcParams['font.family'] = ['Times New Roman', 'KaiTi']
+
 
 class SignalFunction:
     def __init__(self):
@@ -24,6 +27,7 @@ class SignalFunction:
 
 signal_func = SignalFunction()
 
+# %% Appendix
 assert 0, "The below are appendix that should be executed one at a time."
 # %% RGB and CMY
 
