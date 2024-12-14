@@ -6,6 +6,7 @@ import seaborn as sns
 from scipy import stats
 from scipy import interpolate, integrate
 import os
+import colorsys
 # %% Initialization and functions
 os.makedirs('gene', exist_ok=True)
 plt.rcParams['mathtext.fontset'] = 'stix'
