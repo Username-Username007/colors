@@ -261,4 +261,83 @@ ani = manimation.FuncAnimation(fig, update, frames = n_frame, interval = 1000/fp
 
 ani.save("gene/r_and_b.gif", fps = fps)
 
+# %% Frequency filter
+fps = 24
+total_time = 10
+
+fig, axs = plt.subplots(2, 2, dpi = 100, figsize = (6, 3), layout = 'compressed')
+for ax in axs[0]:
+    ax.grid(True, ls = '--')
+    ax.spines['right'].set_edgecolor('none')
+    ax.spines['top'].set_edgecolor('none')
+    ax.spines['left'].set_position(('data', 0))
+    ax.spines['bottom'].set_position(('data', 0))
+    ax.spines['bottom'].set_zorder(3)
+    ax.set_axisbelow(False)
+    x = np.linspace(0, 4*np.pi, 200)
+    xticks = np.arange(np.pi/2, 4*np.pi+1e-2, np.pi/2)
+    ax.set_xticks(xticks, [fr"$\frac{{{2*i/np.pi:.0f}}}{{2}}\pi$" for i in xticks])
+
+axs[1, 1].set_axis_off()
+##
+ax = axs[1, 0]
+ax.grid(True, ls = '--')
+ax.spines['right'].set_edgecolor('none')
+ax.spines['top'].set_edgecolor('none')
+ax.spines['left'].set_position(('data', 0))
+ax.spines['left'].set_zorder(3) # To show the spine above the grid line
+ax.spines['bottom'].set_position(('data', 0))
+ax.spines['bottom'].set_zorder(4)
+    # show the spine above the grid line (any z-order larger than 2 should be ok)
+    # The z-order of grid lines is 2!
+ax.set_axisbelow(False)
+ax.set_ylabel("Signal Strength")
+ax.set_xlabel("Coefficient ($\\frac{1}{f}$)")
+##
+
+artist_frame = []
+
+filter_freq = []
+filter_sim = []
+
+for i in np.linspace(.01, 2.5, total_time*fps):
+    plt.sca(axs[0, 0])
+    y1 = np.sin(x)
+    sin1 = plt.plot(x, y1, c = 'b')[0]
+    y2 = np.sin(x*i)
+    sin2 = plt.plot(x, y2, c = 'r')[0]
+
+    plt.sca(axs[0, 1])
+    prod = y2*y1
+    prod_art = plt.plot(x, prod, c = 'k', ls = '--')[0]
+    f1 = plt.fill_between(x, prod, where = prod > 0, color = 'b', alpha = .5)
+    f2 = plt.fill_between(x, prod, where = prod < 0, color = 'r', alpha = .5)
+
+
+    plt.sca(axs[1, 0])
+    filter_result = integrate.trapezoid(prod, x)
+    filter_freq.append(i)
+    filter_sim.append(filter_result)
+    sim_art = plt.plot(filter_freq, filter_sim, c = 'k')[0]
+
+    plt.sca(axs[1, 1])
+    title = plt.text(.5, 1, R"$\int_0^{4\pi}{\sin(x)\times\sin(%.2fx)}=%.4f$" % (i, filter_result), transform = axs[1, 1].transAxes, ha = 'center', va = 'top')
+        # I don't know why plt.title doesn't work with ArtistAnimation. It is okay with FuncAnimation.
+    plt.legend(
+        [plt.Line2D([], [], c = 'b'),
+         plt.Line2D([], [], c = 'r'),
+         plt.Line2D([], [], c = 'k')],
+         ["Signal", "Filter", "Frequency Spectrum"],
+         bbox_to_anchor = (.5, 0), loc = 'lower center'
+    )
+
+    artist_frame.append(
+        (sin1, sin2, prod_art, f1, f2, title, sim_art)
+    )
+
+
+ani = manimation.ArtistAnimation(fig, artist_frame, interval = 1000/fps, blit = True, repeat = True)
+
+ani.save('gene/filter.gif', fps = fps)
+
 # %%
