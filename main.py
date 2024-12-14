@@ -1,10 +1,10 @@
 # %% Imports
 from matplotlib import pyplot as plt
 import numpy as np
-from matplotlib import patches as mpatches, animation as manimation, patheffects as mpe
+from matplotlib import patches as mpatches, animation as manimation, patheffects as mpe, collections as mcollections
 import seaborn as sns
 from scipy import stats
-from scipy import interpolate
+from scipy import interpolate, integrate
 import os
 # %% Initialization and functions
 os.makedirs('gene', exist_ok=True)
