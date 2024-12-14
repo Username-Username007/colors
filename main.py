@@ -439,4 +439,82 @@ plt.xlim(-1.1, 2)
 plt.ylim(-1.1, 1.1)
 fig.savefig("gene/missing_colors.png", transparent=True)
 
+# %% Two cones
+wl = np.linspace(350, 750, 200)
+
+fig = plt.figure(dpi = 200, figsize = (6, 3), layout = 'compressed')
+
+ax = plt.subplot(1, 2, 1)
+plt.grid(True, ls = '--')
+for c in 'rgb':
+    plt.plot(wl, signal_func(c, wl), c = c)
+plt.title("三色视觉")
+plt.xlabel("Wavelength (nm)")
+plt.ylabel("Sensitivity")
+
+ax = plt.subplot(1, 2, 2)
+plt.grid(True, ls = '--')
+plt.plot(wl, signal_func('b', wl), c = 'r')
+plt.plot(wl, (signal_func('g', wl)+signal_func('r', wl))/2, c = (0.5, .5, 0))
+
+plt.title("二色视觉")
+plt.xlabel("Wavelength (nm)")
+plt.ylabel("Sensitivity")
+
+fig.savefig("gene/two_cones.png", transparent=True)
+
+path = "data/二色视觉"
+fig = plt.figure(layout = 'compressed')
+for fi, file in enumerate(os.listdir(path)):
+    img = np.array(plt.imread(os.path.join(path, file)), copy = True)
+    old_img = np.array(img, copy = True)
+    img[..., 0:2] =(np.mean(img[..., 0:2], axis = 2,keepdims = True))
+    plt.subplot(2, 2, fi+1)
+    plt.imshow(img)
+    plt.axis('off')
+fig.savefig("gene/二色.png")
+
+
+fig = plt.figure(layout = 'compressed')
+for fi, file in enumerate(os.listdir(path)):
+    img = np.array(plt.imread(os.path.join(path, file)), copy = True)
+    old_img = np.array(img, copy = True)
+    plt.subplot(2, 2, fi+1)
+    plt.imshow(img)
+    plt.axis('off')
+fig.savefig("gene/三色.png")
+
+
+
+fig = plt.figure(layout = 'compressed')
+img = np.zeros((1000, 1000, 3), dtype = np.uint8)
+xx, yy = np.meshgrid(np.linspace(-1, 1, img.shape[1]), np.linspace(-1, 1, img.shape[0]))
+hue = np.arctan2(yy, xx)
+new_hue = hue
+new_hue[hue<0] += np.pi*2
+new_hue /= 2*np.pi
+sat = np.sqrt(xx**2 + yy**2)
+img_hsv = np.array([colorsys.hsv_to_rgb(h, 1, 1) for h, s in zip(new_hue.ravel(), sat.ravel())]).reshape(img.shape)*255
+img_hsv = img_hsv.astype(np.uint8)
+
+plt.subplot(1, 2, 1)
+plt.imshow(img_hsv)
+plt.axis('off')
+plt.subplot(1, 2, 2)
+img_hsv[..., 0:2] = (np.mean(img_hsv[..., 0:2], axis = 2, keepdims = True))
+plt.imshow(img_hsv)
+plt.axis('off')
+fig.savefig("gene/二色hsv.png")
+
+
+fig = plt.figure(layout = 'compressed')
+img = plt.imread("data/红绿灯2.png")
+img[..., 0:2] = (np.mean(img[..., 0:2], axis = 2, keepdims = True))
+plt.imshow(img)
+plt.axis('off')
+fig.savefig("gene/红绿灯.png")
+
+
+# %%
+
 # %%
