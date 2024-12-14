@@ -142,4 +142,35 @@ ylabel('Middle Cone (G)');
 zlabel('Short Cone (B)');
 exportgraphics(fig, "gene/cie_1931_plane.png", resolution = 900);
 
-%%
+%% Hyper green
+save_gif_path = 'gene/hyper_green.gif';
+close all;
+wavelen = linspace(380, 750);
+fig = figure(color = 'w');
+hold on;
+grid on;
+rgb = [color_signal('r', wavelen)', color_signal('g', wavelen)', color_signal('b', wavelen)'];
+% rgb = rgb ./ max(rgb, [], 1);
+% scatter3(rgb(:, 1), rgb(:, 2), rgb(:, 3), 30, rgb ./ max(rgb,[], 2), 'filled', markeredgecolor = 'k');
+for i = 1:(size(rgb, 1) - 1)
+    plot3(rgb(i:i+1, 1), rgb(i:i+1, 2), rgb(i:i+1, 3), 'o-', color = rgb(i, :) / max(rgb(i, :), [], 'all'), LineWidth= 3);
+end
+xlabel('Long Cone (R)');
+ylabel('Middle Cone (G)');
+zlabel('Short Cone (B)');
+
+scatter3(0, 1, 0, 400, 'g', 'filled');
+
+grid on;
+
+for az = linspace(0, 360, 200)
+    view(az, 20);
+    fr = getframe(fig);
+    [A, cmap] = rgb2ind(fr.cdata, 256);
+    if az == 0
+        imwrite(A, cmap, save_gif_path, 'gif', delaytime = .1, loopcount = inf);
+    else
+        imwrite(A, cmap, save_gif_path, 'gif', 'WriteMode', 'append', 'DelayTime', 0.1);
+    end
+    % pause(.1);
+end

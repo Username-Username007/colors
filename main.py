@@ -195,8 +195,27 @@ plt.show(block=False)
 
 ani.save("gene/signal_sensing.gif", fps = 24)
 
-
-
-
+# %% No hyper-blue nor hyper-red
+fig = plt.figure(dpi = 600, layout = 'compressed')
+for c in 'rgb':
+    x = np.linspace(350, 750, 200)
+    plt.plot(x, signal_func(c, x), c = c)
+###
+wl = [400, 700]
+lc = ['b', 'r']
+ec = ['m', 'y']
+for i in range(len(wl)):    
+    plt.axvline(wl[i], lw = 4, c = lc[i])
+    plt.scatter(wl[i], signal_func(lc[i], wl[i]), c = lc[i], s = 100, edgecolor = ec[i], lw = 2, zorder = 2)
+    t = plt.text(wl[i], signal_func(lc[i], wl[i])+.05, 
+             "("+ ", ".join(
+                    [f"{signal_func(c, wl[i]):.2f}" for c in 'rgb']
+             ) + ")", ha = 'center', va = 'bottom', fontsize = 12, bbox = dict(facecolor = 'w', alpha = .8))
+###
+plt.xlabel("Wavelength (nm)")
+plt.ylabel("Signal Strength")
+plt.title("Influence Lines of LMS")
+plt.grid(True)
+fig.savefig("gene/no_hyper_red_blue.png", transparent=False)
 
 # %%
