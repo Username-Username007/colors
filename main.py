@@ -1,7 +1,7 @@
 # %% Imports
 from matplotlib import pyplot as plt
 import numpy as np
-from matplotlib import patches as mpatches, animation as manimation, patheffects as mpe, collections as mcollections
+from matplotlib import patches as mpatches, animation as manimation, patheffects as mpe, collections as mcollections, path as mpath, patheffects as mpe
 import seaborn as sns
 from scipy import stats
 from scipy import interpolate, integrate
@@ -344,5 +344,47 @@ for i in np.linspace(.01, 2.5, total_time*fps):
 ani = manimation.ArtistAnimation(fig, artist_frame, interval = 1000/fps, blit = True, repeat = True)
 
 ani.save('gene/filter.gif', fps = fps)
+
+# %% Color circle
+
+img = np.zeros((1000, 1000, 3), dtype = np.uint8)
+xx, yy = np.meshgrid(np.linspace(-1, 1, img.shape[1]), np.linspace(-1, 1, img.shape[0]))
+hue = np.arctan2(yy, xx)
+new_hue = hue
+new_hue[hue<0] += np.pi*2
+new_hue /= 2*np.pi
+sat = np.sqrt(xx**2 + yy**2)
+
+img_hsv = np.array([colorsys.hsv_to_rgb(h, s, 1) for h, s in zip(new_hue.ravel(), sat.ravel())]).reshape(img.shape)*255
+
+img_hsl = np.array([colorsys.hls_to_rgb(h, .5, s) for h, s in zip(new_hue.ravel(), sat.ravel())]).reshape(img.shape)*255
+
+img_hsl = img_hsl.astype(np.uint8)
+img_hsv = img_hsv.astype(np.uint8)
+
+#####
+fig = plt.figure(dpi = 100, figsize = (6, 3))
+imgs = [img_hsl, img_hsv]
+cs = ['HSL', "HSV"]
+###
+hue = np.arange(0, 2*np.pi, np.pi/3)
+cn = ['R', 'Y', 'G', 'C', 'B', 'M']
+tc = ['k', 'w']*3
+tgc = ['w', 'k']*3
+
+for axi, ax in enumerate(fig.subplots(1, 2)):
+    plt.sca(ax)
+    ax.set_aspect('equal')
+    ax.axis('off')
+    plt.title(cs[axi])
+    # art = plt.imshow(imgs[axi], extent=(-1, 1, -1, 1))
+    art = plt.pcolormesh(xx, yy, imgs[axi])
+    path = mpath.Path.circle((0, 0), 1)
+    art.set_clip_path(path, transform = ax.transData)
+    for i in range(len(hue)):
+        r = .8
+        t = plt.text(r*np.cos(hue[i]), r*np.sin(hue[i]), cn[i], c = tc[i], ha = 'center', va = 'center', path_effects = [mpe.withStroke(linewidth = 2, foreground = tgc[i])])
+        # t.set_path_effects(, patheffects = [mpe.withStroke(linewidth = 3, foreground = 'w')])
+fig.savefig("gene/hsl_hsv.png", transparent=1)
 
 # %%
