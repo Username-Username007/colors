@@ -73,7 +73,7 @@ ax3.quiver3D(x[::step], 0*x[::step], 0*x[::step], 0*x[::step], y[::step], z[::st
 
 
 x = np.linspace(0, 3*2*np.pi, 300)
-y = np.sin(x)
+y = np.sin(x+np.pi/2)
 z = 0*x
 
 ax3.plot3D(x, y, z, c = 'b')
