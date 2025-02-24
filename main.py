@@ -4,7 +4,7 @@ import numpy as np
 from matplotlib import patches as mpatches, animation as manimation, patheffects as mpe, collections as mcollections, path as mpath, patheffects as mpe, gridspec as mgs
 import seaborn as sns
 from scipy import stats
-from scipy import interpolate, integrate
+from scipy import interpolate, integrate, fftpack
 import os
 import colorsys
 # %% Initialization and functions
@@ -515,6 +515,37 @@ plt.axis('off')
 fig.savefig("gene/红绿灯.png")
 
 
-# %%
+# %% DCT
+
+threshold = 10
+img_path = R"data\二色视觉\3.png"
+img = plt.imread(img_path)
+
+fig = plt.figure(layout = 'compressed')
+ax = plt.subplot(2, 2, 1)
+x = img[:64, :64]
+plt.title("Original Image")
+plt.imshow(x)
+
+ax = plt.subplot(2, 2, 2)
+plt.title("DCT Result")
+dct = (fftpack.dctn(x))
+plt.imshow(np.abs(dct)/dct.max())
+plt.annotate('Only the upper-left\ncorner is non-zero.', (0, 0), (.5, .3), textcoords='axes fraction', ha = 'center', path_effects = [mpe.withStroke(foreground = 'w', linewidth = 2)], arrowprops=dict(arrowstyle = '->', connectionstyle = "angle3,angleA=-20,angleB=100", path_effects = [mpe.withStroke(foreground = 'w', linewidth = 4)]))
+
+ax = plt.subplot(2, 2, 3)
+plt.title("Frequency-Domain Histogram")
+plt.hist(dct.ravel(), np.logspace(-3, 4.5), log = True)
+plt.xscale('log')
+
+ax = plt.subplot(2, 2, 4)
+plt.title(f"Erasing {np.where(dct<threshold)[0].size / dct.size:.2%} of the DCT")
+dct[dct<threshold] = 0
+img2 = fftpack.idctn(dct)
+img2 -= img2.min()
+img2 /= img2.max()
+plt.imshow(img2)
+
+fig.savefig("gene/dct.png", dpi = 300, transparent=False)
 
 # %%
