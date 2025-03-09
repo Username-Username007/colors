@@ -11,6 +11,10 @@ import colorsys
 os.makedirs('gene', exist_ok=True)
 plt.rcParams['mathtext.fontset'] = 'stix'
 plt.rcParams['font.family'] = ['Times New Roman', 'KaiTi']
+plt.rcParams['figure.constrained_layout.use'] = True
+plt.rcParams['savefig.transparent'] = True
+plt.rcParams['savefig.bbox'] = 'tight'
+plt.rcParams['savefig.dpi'] = 300
 
 
 class SignalFunction:
