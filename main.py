@@ -552,4 +552,134 @@ plt.imshow(img2)
 
 fig.savefig("gene/dct.png", dpi = 300, transparent=False)
 
+# %% Construct HSV color space: create the continuous spectrum
+hue = np.linspace(0, 5/6, 255)
+colors = np.array([colorsys.hsv_to_rgb(h, 1, 1) for h in hue]).reshape((1, -1, 3))
+spectrum = np.concat([colors]*10, 0)
+X_freq, Y = np.meshgrid(np.linspace(750, 350, spectrum.shape[1]), np.linspace(0, 1, spectrum.shape[0]))
+
+# create spectrum
+fig = plt.figure(figsize = (6, 1))
+ax = plt.subplot()
+plt.pcolormesh(X_freq, Y, spectrum)
+ax.yaxis.set_visible(False)
+ax.xaxis.set_label_text("Wavelength (nm)")
+fig.savefig("gene/spectrum.png", dpi = 300, transparent = True)
+
+# %% Construct HSV color space: create circular spectrum
+hue = np.linspace(0, 5/6, 255)
+colors = np.array([colorsys.hsv_to_rgb(h, 1, 1) for h in hue]).reshape((1, -1, 3))
+spectrum = np.concat([colors]*10, 0)
+X_hue, Y_r = np.meshgrid(np.linspace(0, 2*np.pi*5/6, spectrum.shape[1]), np.linspace(.8, 1, spectrum.shape[0]))
+
+fig = plt.figure(figsize = (4, 4))
+ax = plt.subplot(projection = 'polar')
+ax.set_xticks(np.arange(0, 2*np.pi, np.pi/3))
+plt.pcolormesh(X_hue, Y_r, spectrum)
+ax.yaxis.set_visible(False)
+ax.xaxis.set_label_text("Hue")
+fig.savefig("gene/spectrum_ring.png", dpi = 300, transparent = True)
+
+# %% Construct HSV color space: find missing colors
+hue = np.linspace(0, 1, 255)
+colors = np.array([colorsys.hsv_to_rgb(h, 1, 1) for h in hue]).reshape((1, -1, 3))
+spectrum = np.concat([colors]*10, 0)
+X_hue, Y_r = np.meshgrid(np.linspace(0, 2*np.pi, spectrum.shape[1]), np.linspace(.8, 1, spectrum.shape[0]))
+
+fig = plt.figure(figsize = (4, 4))
+ax = plt.subplot(projection = 'polar')
+ax.set_xticks(np.arange(0, 2*np.pi, np.pi/3))
+plt.pcolormesh(X_hue, Y_r, spectrum)
+ax.yaxis.set_visible(False)
+ax.xaxis.set_label_text("Hue")
+ax.annotate(R"$\mu\times M+(1-\mu)\times R$", (11/6*np.pi, .9), (-4, 3), textcoords = 'offset fontsize', ha = 'right', arrowprops=dict(arrowstyle='<-', connectionstyle='angle, angleA=-45, angleB=0'))
+ax.annotate('', (2*np.pi, 0.9), (5/3*np.pi, 0.9), arrowprops=dict(arrowstyle='fancy', connectionstyle='angle3, angleA=30, angleB=-90', facecolor = 'none', edgecolor = 'k'))
+ax.text(11/6*np.pi, 1.1, R'$\mu$', fontsize = 15)
+fig.savefig("gene/spectrum_ring_full.png", dpi = 300, transparent = True)
+
+# %% Construct HSV color space: spectrum analysis [FuncAnimation, with some problem]
+hue = np.linspace(0, 1, 10)
+colors = np.array([colorsys.hsv_to_rgb(h, 1, 1) for h in hue]).reshape((1, -1, 3))
+spectrum = np.concat([colors]*10, 0)
+X_hue, Y_r = np.meshgrid(np.linspace(0, 2*np.pi, spectrum.shape[1]), np.linspace(.8, 1, spectrum.shape[0]))
+
+fig = plt.figure(figsize = (6, 3))
+ax = plt.subplot(121, projection = 'polar')
+ax.set_xticks(np.arange(0, 2*np.pi, np.pi/3))
+plt.pcolormesh(X_hue, Y_r, spectrum)
+ax.yaxis.set_visible(False)
+ax.xaxis.set_label_text("Hue")
+
+ax2 = plt.subplot(122)
+x_freq = np.linspace(350, 750, len(hue))
+
+# for i in range(len(hue)):
+i = 0
+all_zeros = [0]*len(x_freq)
+all_zeros[i] = 1
+fft_line, = ax2.plot(x_freq, all_zeros)
+# fig.canvas.draw()
+color_fig_coord = fig.transFigure.inverted().transform(ax.transData.transform((hue[i]*2*np.pi, 0.9)))
+fft_fig_coord = fig.transFigure.inverted().transform(ax2.transData.transform((x_freq[i], 1)))
+arrow = mpatches.FancyArrowPatch(color_fig_coord, (fft_fig_coord), arrowstyle='<-, head_width=4, head_length = 4')
+fig.add_artist(arrow)
+ax2.set_xlabel("Wavelength (nm)")
+ax2.set_ylabel("Relative Amplitude")
+
+# ani = manimation.ArtistAnimation(fig, artists, interval = 1000/24, blit=True, repeat = False)
+# ani.save('gene/spectrum_analysis.gif', fps = 24)
+
+
+def animation(frame):
+    all_zeros = [0]*len(x_freq)
+    all_zeros[frame] = 1
+    fft_line.set_ydata(all_zeros)
+    i = frame
+    color_fig_coord = fig.transFigure.inverted().transform(ax.transData.transform((hue[i]*2*np.pi, 0.9)))
+    fft_fig_coord = fig.transFigure.inverted().transform(ax2.transData.transform((x_freq[i], 1)))
+    if(frame == 0):
+        # animation.arrow = arrow
+        animation.arrow = mpatches.FancyArrowPatch(color_fig_coord, (fft_fig_coord), arrowstyle='<-, head_width=4, head_length = 4')
+        fig.add_artist(animation.arrow)
+    else:
+        animation.arrow.set_positions(color_fig_coord, fft_fig_coord)
+    return [fft_line, arrow]
+
+ani = manimation.FuncAnimation(fig, animation, frames=len(x_freq), interval = 1000/24, blit=True, repeat = True)
+ani.save('gene/spectrum_analysis_func.gif', fps = 24)
+
+# %% Construct HSV color space: spectrum analysis [ArtistAmination]
+
+hue = np.linspace(0, 1, 255)
+colors = np.array([colorsys.hsv_to_rgb(h, 1, 1) for h in hue]).reshape((1, -1, 3))
+spectrum = np.concat([colors]*10, 0)
+X_hue, Y_r = np.meshgrid(np.linspace(0, 2*np.pi, spectrum.shape[1]), np.linspace(.8, 1, spectrum.shape[0]))
+
+fig = plt.figure(figsize = (6, 3))
+ax = plt.subplot(121, projection = 'polar')
+ax.set_xticks(np.arange(0, 2*np.pi, np.pi/3))
+plt.pcolormesh(X_hue, Y_r, spectrum)
+ax.yaxis.set_visible(False)
+ax.xaxis.set_label_text("Hue")
+
+ax2 = plt.subplot(122)
+x_freq = np.linspace(350, 750, len(hue))
+
+artists = []
+for i in range(len(hue)):
+    all_zeros = [0]*len(x_freq)
+    all_zeros[i] = 1
+    fft_line, = ax2.plot(x_freq, all_zeros)
+    fig.canvas.draw()
+    color_fig_coord = fig.transFigure.inverted().transform(ax.transData.transform((hue[i]*2*np.pi, 0.9)))
+    fft_fig_coord = fig.transFigure.inverted().transform(ax2.transData.transform((x_freq[i], 1)))
+    arrow = mpatches.FancyArrowPatch(color_fig_coord, (fft_fig_coord), arrowstyle='<-, head_width=4, head_length = 4')
+    fig.add_artist(arrow)
+    artists.append((fft_line, arrow))
+    ax2.set_xlabel("Wavelength (nm)")
+    ax2.set_ylabel("Relative Amplitude")
+
+ani = manimation.ArtistAnimation(fig, artists, interval = 1000/24, blit=False, repeat = True)
+ani.save('gene/spectrum_analysis_art.gif', fps = 24)
+
 # %%
