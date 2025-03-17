@@ -663,7 +663,7 @@ ax.yaxis.set_visible(False)
 ax.xaxis.set_label_text("Hue")
 
 ax2 = plt.subplot(122)
-x_freq = np.linspace(350, 750, len(hue))
+x_freq = np.linspace(350, 750+150, len(hue))
 
 artists = []
 for i in range(len(hue)):
@@ -675,9 +675,13 @@ for i in range(len(hue)):
     fft_fig_coord = fig.transFigure.inverted().transform(ax2.transData.transform((x_freq[i], 1)))
     arrow = mpatches.FancyArrowPatch(color_fig_coord, (fft_fig_coord), arrowstyle='<-, head_width=4, head_length = 4')
     fig.add_artist(arrow)
-    artists.append((fft_line, arrow))
     ax2.set_xlabel("Wavelength (nm)")
     ax2.set_ylabel("Relative Amplitude")
+    p = mpatches.Rectangle((750, 0), 150, 1, edgecolor = 'none', facecolor = 'b', transform = ax2.get_xaxis_transform(), zorder = -2)
+    ax2.add_artist(p)
+    t = ax2.text(750+150, 0.5, "Composite Colors\nImginary Wavelength", ha = 'right', color = 'r', transform = ax2.get_xaxis_transform(), clip_on = True, rotation = 90)
+    artists.append((fft_line, arrow, p, t))
+
 
 ani = manimation.ArtistAnimation(fig, artists, interval = 1000/24, blit=False, repeat = True)
 ani.save('gene/spectrum_analysis_art.gif', fps = 24)
