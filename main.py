@@ -682,4 +682,29 @@ for i in range(len(hue)):
 ani = manimation.ArtistAnimation(fig, artists, interval = 1000/24, blit=False, repeat = True)
 ani.save('gene/spectrum_analysis_art.gif', fps = 24)
 
+# %% HSL
+
+hue = np.linspace(0, 1, 255)
+r = np.linspace(0, 1, 255)
+hue_x, r_y = np.meshgrid(hue, r)
+colors = np.zeros(r_y.shape+(3,))
+
+colors = np.reshape([colorsys.hls_to_rgb(h, .5, r) for h, r in zip(hue_x.ravel(), r_y.ravel())], hue_x.shape+(3,))
+base_color = np.broadcast_to(colors[-1], colors.shape)
+
+add_up = base_color * np.expand_dims(r_y, 2)+ np.sum(base_color/base_color.shape[0], axis = 1, keepdims=True) * np.expand_dims(1-r_y, 2)
+
+fig = plt.figure()
+ax = plt.subplot(projection = 'polar')
+ax.tick_params(labelsize = 0)
+ax.grid(False)
+ax.pcolormesh(hue_x*2*np.pi, r_y, add_up)
+# ax = plt.subplot(122, projection = 'polar')
+# ax.tick_params(labelsize = 0)
+# ax.grid(False)
+# ax.pcolormesh(hue_x*2*np.pi, r_y, colors)
+    # to compare with the real HSL
+ax.set_title("HSL")
+fig.savefig("gene/hsl.png", dpi = 300, transparent = True)
+
 # %%
