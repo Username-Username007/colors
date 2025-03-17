@@ -553,7 +553,7 @@ plt.imshow(img2)
 fig.savefig("gene/dct.png", dpi = 300, transparent=False)
 
 # %% Construct HSV color space: create the continuous spectrum
-hue = np.linspace(0, 5/6, 255)
+hue = np.linspace(0, 3/4, 255)
 colors = np.array([colorsys.hsv_to_rgb(h, 1, 1) for h in hue]).reshape((1, -1, 3))
 spectrum = np.concat([colors]*10, 0)
 X_freq, Y = np.meshgrid(np.linspace(750, 350, spectrum.shape[1]), np.linspace(0, 1, spectrum.shape[0]))
@@ -567,10 +567,10 @@ ax.xaxis.set_label_text("Wavelength (nm)")
 fig.savefig("gene/spectrum.png", dpi = 300, transparent = True)
 
 # %% Construct HSV color space: create circular spectrum
-hue = np.linspace(0, 5/6, 255)
+hue = np.linspace(0, 3/4, 255)
 colors = np.array([colorsys.hsv_to_rgb(h, 1, 1) for h in hue]).reshape((1, -1, 3))
 spectrum = np.concat([colors]*10, 0)
-X_hue, Y_r = np.meshgrid(np.linspace(0, 2*np.pi*5/6, spectrum.shape[1]), np.linspace(.8, 1, spectrum.shape[0]))
+X_hue, Y_r = np.meshgrid(np.linspace(0, 2*np.pi*3/4, spectrum.shape[1]), np.linspace(.8, 1, spectrum.shape[0]))
 
 fig = plt.figure(figsize = (4, 4))
 ax = plt.subplot(projection = 'polar')
@@ -592,9 +592,9 @@ ax.set_xticks(np.arange(0, 2*np.pi, np.pi/3))
 plt.pcolormesh(X_hue, Y_r, spectrum)
 ax.yaxis.set_visible(False)
 ax.xaxis.set_label_text("Hue")
-ax.annotate(R"$\mu\times M+(1-\mu)\times R$", (11/6*np.pi, .9), (-4, 3), textcoords = 'offset fontsize', ha = 'right', arrowprops=dict(arrowstyle='<-', connectionstyle='angle, angleA=-45, angleB=0'))
-ax.annotate('', (2*np.pi, 0.9), (5/3*np.pi, 0.9), arrowprops=dict(arrowstyle='fancy', connectionstyle='angle3, angleA=30, angleB=-90', facecolor = 'none', edgecolor = 'k'))
-ax.text(11/6*np.pi, 1.1, R'$\mu$', fontsize = 15)
+ax.annotate(R"$\mu\times M+(1-\mu)\times R$", (7/4*np.pi, .9), (-4, 3), textcoords = 'offset fontsize', ha = 'right', arrowprops=dict(arrowstyle='<-', connectionstyle='angle, angleA=-45, angleB=0'))
+ax.annotate('', (2*np.pi, 0.9), (3/2*np.pi, 0.9), arrowprops=dict(arrowstyle='fancy, head_width = 1, tail_width = 0.8, head_length = 2', connectionstyle='angle3, angleA=0, angleB=-90', facecolor = 'none', edgecolor = 'k'))
+ax.text(7/4*np.pi, 1.1, R'$\mu$', fontsize = 15)
 fig.savefig("gene/spectrum_ring_full.png", dpi = 300, transparent = True)
 
 # %% Construct HSV color space: spectrum analysis [FuncAnimation, with some problem]
