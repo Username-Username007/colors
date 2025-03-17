@@ -699,20 +699,30 @@ inverse_base_color = np.concat((base_color, base_color), axis = 1)[::, int(base_
 inverse_base_color = 1-base_color
     # this is the second method to calculat the inverse of the base color
     # the second method is the most accurate, but it does not show the hue relationship.
-add_up = base_color + np.expand_dims(1-r_y, 2)*inverse_base_color
+comp_1 = base_color
+comp_2 = np.expand_dims(1-r_y, 2)*inverse_base_color
+add_up = comp_1 + comp_2
 
-fig = plt.figure()
-ax = plt.subplot(projection = 'polar')
+fig = plt.figure(figsize = (6, 6))
+ax = plt.subplot(221, projection = 'polar')
 ax.tick_params(labelsize = 0)
 ax.grid(False)
-ax.pcolormesh(hue_x*2*np.pi, r_y, add_up)
-# ax = plt.subplot(122, projection = 'polar')
-# ax.tick_params(labelsize = 0)
-# ax.grid(False)
-# ax.pcolormesh(hue_x*2*np.pi, r_y, colors)
-    # to compare with the real HSL
-ax.set_title("HSV")
-fig.savefig("gene/hsl.png", dpi = 300, transparent = True)
+ax.pcolormesh(hue_x*2*np.pi, r_y, comp_1)
+ax.set_title("Compound 1: Base color")
+
+ax = plt.subplot(222, projection = 'polar')
+ax.tick_params(labelsize = 0)
+ax.grid(False)
+ax.pcolormesh(hue_x*2*np.pi, r_y, comp_2)
+ax.set_title("Compound 2: Inverse color")
+
+ax = plt.subplot(223, projection = 'polar')
+ax.tick_params(labelsize = 0)
+ax.grid(False)
+ax.pcolormesh(hue_x*2*np.pi, r_y, comp_2+comp_1)
+ax.set_title("Base color + Inverse color = HSV")
+
+fig.savefig("gene/hsv.png", dpi = 300, transparent = True)
 
 # %% HSL
 
