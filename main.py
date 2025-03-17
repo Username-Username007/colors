@@ -724,19 +724,29 @@ colors = np.zeros(r_y.shape+(3,))
 colors = np.reshape([colorsys.hls_to_rgb(h, .5, r) for h, r in zip(hue_x.ravel(), r_y.ravel())], hue_x.shape+(3,))
 base_color = np.broadcast_to(colors[-1], colors.shape)
 
-add_up = base_color * np.expand_dims(r_y, 2)+ np.sum(base_color/base_color.shape[0], axis = 1, keepdims=True) * np.expand_dims(1-r_y, 2)
+comp_1 = base_color * np.expand_dims(r_y, 2)
+comp_2 = np.sum(base_color/base_color.shape[0], axis = 1, keepdims=True) * np.expand_dims(1-r_y, 2)
+add_up = comp_1 + comp_2
 
-fig = plt.figure()
-ax = plt.subplot(projection = 'polar')
+fig = plt.figure(figsize = (6, 6))
+ax = plt.subplot(221, projection = 'polar')
 ax.tick_params(labelsize = 0)
 ax.grid(False)
-ax.pcolormesh(hue_x*2*np.pi, r_y, add_up)
-# ax = plt.subplot(122, projection = 'polar')
-# ax.tick_params(labelsize = 0)
-# ax.grid(False)
-# ax.pcolormesh(hue_x*2*np.pi, r_y, colors)
-    # to compare with the real HSL
-ax.set_title("HSL")
+ax.pcolormesh(hue_x*2*np.pi, r_y, comp_1)
+ax.set_title("Compound 1: Base color")
+
+ax = plt.subplot(222, projection = 'polar')
+ax.tick_params(labelsize = 0)
+ax.grid(False)
+ax.pcolormesh(hue_x*2*np.pi, r_y, comp_2)
+ax.set_title("Compound 2: Composite color")
+
+ax = plt.subplot(223, projection = 'polar')
+ax.tick_params(labelsize = 0)
+ax.grid(False)
+ax.pcolormesh(hue_x*2*np.pi, r_y, comp_2+comp_1)
+ax.set_title("Base color + Composite color = HSL")
+
 fig.savefig("gene/hsl.png", dpi = 300, transparent = True)
 
 # %%
