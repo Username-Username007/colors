@@ -686,6 +686,30 @@ for i in range(len(hue)):
 ani = manimation.ArtistAnimation(fig, artists, interval = 1000/24, blit=False, repeat = True)
 ani.save('gene/spectrum_analysis_art.gif', fps = 24)
 
+# %% HSV: inverse color ring
+
+hue = np.linspace(0, 1, 255)
+r = np.linspace(0, 1, 255)
+hue_x, r_y = np.meshgrid(hue, r)
+
+colors = np.reshape([colorsys.hsv_to_rgb(h, 1, 1) for h, r in zip(hue_x.ravel(), r_y.ravel())], hue_x.shape+(3,))
+colors[r_y<0.8] = np.nan
+
+fig = plt.figure()
+ax = plt.subplot(121, projection = 'polar')
+ax.pcolor(hue_x*2*np.pi, r_y, colors)
+ax.grid(False)
+ax.tick_params(labelsize = 0)
+ax.set_title("Colors")
+
+ax = plt.subplot(122, projection = 'polar')
+ax.pcolor(hue_x*2*np.pi, r_y, 1-colors)
+ax.grid(False)
+ax.tick_params(labelsize = 0)
+ax.set_title("Inverse colors")
+
+fig.savefig("gene/inverse colors.png", dpi = 300, transparent=True)
+
 # %% HSV
 
 hue = np.linspace(0, 1, 255)
