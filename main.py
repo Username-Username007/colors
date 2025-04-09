@@ -1,7 +1,7 @@
 # %% Imports
 from matplotlib import pyplot as plt
 import numpy as np
-from matplotlib import patches as mpatches, animation as manimation, patheffects as mpe, collections as mcollections, path as mpath, patheffects as mpe, gridspec as mgs
+from matplotlib import patches as mpatches, animation as manimation, patheffects as mpe, collections as mcollections, path as mpath, patheffects as mpe, gridspec as mgs, colors as mcolors
 import seaborn as sns
 from scipy import stats
 from scipy import interpolate, integrate, fftpack
@@ -782,5 +782,12 @@ ax.pcolormesh(hue_x*2*np.pi, r_y, comp_2+comp_1)
 ax.set_title("Base color + Composite color = HSL")
 
 fig.savefig("gene/hsl.png", dpi = 300, transparent = True)
+
+# %% B&W color palette
+
+X, Y = np.meshgrid(np.linspace(0, 2*np.pi), np.linspace(0, 1, 255))
+ax = plt.subplot(projection = 'polar')
+ax.set_axis_off()
+ax.pcolormesh(X, Y, 1-Y, cmap = mcolors.LinearSegmentedColormap.from_list('', ['w', 'k']))
 
 # %%
