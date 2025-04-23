@@ -1,7 +1,7 @@
 # %% Imports
 
 import numpy as np
-from matplotlib import pyplot as plt, ticker as mticker
+from matplotlib import pyplot as plt, ticker as mticker, gridspec as mgridspec
 from pathlib import Path
 import colorsys
 import os
@@ -89,5 +89,43 @@ def edu_func_weigh_2(**kwargs)->int:
         return int(sys.getsizeof(kwargs['object'])*1.2)
     else:
         return sys.getsizeof(kwargs['object'])
+
+# %% Figure components
+
+fig = plt.figure(facecolor = 'red')
+gs = mgridspec.GridSpec(2, 3, fig)
+subfig = fig.add_subfigure(gs[0, 0], facecolor = 'green')
+subfig2 = fig.add_subfigure(gs[1, 1], facecolor = (0.5, 1, 0.5))
+ax = subfig.subplots(2, 2)
+ax[0, 0].scatter(*np.random.rand(2, 20), c = 'k', s = 20, edgecolor = 'm', linewidth = 0.5)
+fig.savefig("gene2/figure components.png", transparent=False)
+plt.show(block=False)
+
+# %% Axes components
+
+fig = plt.figure(figsize = (4, 2))
+ax = plt.subplot(121)
+ax.grid(True)
+ax.set_title("这是Title", color = 'g')
+ax.set_xlabel("This is $x$ label", color = 'r')
+ax.set_ylabel("This is $y$ label", color = 'r')
+ax.tick_params('both', length = 10, direction = 'inout', width = 4, color = 'r', labelsize = 5, labelcolor = 'r', rotation = 90)
+ax.spines[:].set_edgecolor('m')
+
+ax = plt.subplot(122)
+ax.grid(True, ls = '--', clip_on = False)
+ax.spines[['top', 'right']].set_visible(False)
+ax.spines[['bottom', 'left']].set_position(('data', 0))
+ax.tick_params('both', length = 0)
+ax.set_xlim(-1, 1)
+ax.set_ylim(-1, 1)
+ax.plot(1, 0, 'k>', transform = ax.get_yaxis_transform(), clip_on = False)
+ax.plot(0, 1, 'k^', transform = ax.get_xaxis_transform(), clip_on = False)
+ax.set_xlabel("$x$ label")
+ax.set_ylabel("$y$ label")
+ax.spines[:].set_edgecolor('m')
+ax.tick_params('both', direction = 'inout', color = 'r', labelsize = 5, labelcolor = 'r')
+
+fig.savefig('gene2/axes components.png')
 
 # %%
