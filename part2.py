@@ -14,6 +14,7 @@ plt.rcParams['savefig.transparent'] = True
 plt.rcParams['figure.constrained_layout.use'] = True
 plt.rcParams['savefig.bbox'] = 'tight'
 plt.rcParams['font.family'] = ['Times New Roman', 'FangSong']
+plt.rcParams['mathtext.fontset'] = 'stix'
 
 # %% Appendix
 
