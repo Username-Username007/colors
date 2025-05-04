@@ -273,6 +273,64 @@ ax.tick_params(axis = 'both', labelcolor = 'w', color = 'w', direction = 'inout'
 ax.set_ylabel('$y$', c = 'w')
 ax.xaxis.set_major_formatter(mticker.FuncFormatter(lambda x, pos: R"$%c\frac{%.0f}{2}\pi$" % ((['+', '+', '-'][int(np.sign(x))]),np.abs(x*2/np.pi)) ))
 
+# %% Coordinate systems
+
+def add_axes(canvas, transform, color = 'k', line_dict = {}):
+    x_line = plt.Line2D([0, 1], [0, 0], color = color, lw = 1, transform = transform, **line_dict)
+    y_line = plt.Line2D([0, 0], [0, 1], color = color, lw = 1, transform = transform, **line_dict)
+    canvas.add_artist(x_line)
+    canvas.add_artist(y_line)
+    for x in np.linspace(0, 1, 11):
+        x_tick = plt.Line2D([x, x], [-0.005, 0.005], color = color, lw = 1, transform = transform, **line_dict)
+        canvas.add_artist(x_tick)
+    for y in np.linspace(0, 1, 11):
+        y_tick = plt.Line2D([-0.005, 0.005], [y, y], color = color, lw = 1, transform = transform, **line_dict)
+        canvas.add_artist(y_tick)
+with plt.rc_context({'savefig.bbox':'tight'}):
+    fig = plt.figure(figsize = (4, 4), facecolor = 'purple')
+    add_axes(fig, fig.transFigure, 'y')
+    gs = mgridspec.GridSpec(2, 2, fig)
+    subfig = fig.add_subfigure(gs[0, :], facecolor = 'green')
+    add_axes(subfig, subfig.transSubfigure, 'red')
+
+    axs = subfig.subplot_mosaic("AA\nBC")
+    axs['A'].spines[:].set_visible(False)
+    add_axes(axs['A'], axs['A'].transAxes, 'w', {'clip_on':False})
+    for ax in axs.values():
+        ax.set_xlim(-3, 3)
+        ax.set_ylim(-3, 3)
+        ax.set_facecolor('orange')
+
+    fig.savefig("gene2/transforms.png", transparent=False)
+
+# %% Coordinate systems in plotting
+
+fig = plt.figure(figsize = (3, 3))
+fig.add_axes((0.55, 0.1, 0.4, .8))
+ax = fig.add_axes((0.1, 0.1, 0.35, .8))
+data = np.array([1, 3, 4, 2, 1, 5, -2])
+ax.plot(data)
+ax.plot(data+0.5, transform = ax.transData)
+ax.plot(1, 1, 'ro', markersize = 10, clip_on=False, transform = ax.transAxes)
+ax.plot(0.5, 0.5, 'ro', markersize = 10, clip_on=False, transform = ax.transAxes)
+
+ax.plot(0.5, 0.5, 'bo', markersize = 10, clip_on=False, transform = fig.transFigure)
+ax.plot(1, 1, 'bo', markersize = 10, clip_on=False, transform = fig.transFigure)
+
+fig.savefig('gene2/transforms_plot.png')
+
+# %% Special transforms
+
+fig = plt.figure(figsize = (3, 3))
+ax = plt.subplot()
+ax.spines[['left', 'bottom']].set_position(('data', 0))
+ax.spines[['right', 'top']].set_visible(False)
+x = np.linspace(-1, 1, 30)
+y = np.cumsum(np.random.rand(x.size)-0.5)
+ax.plot(x, y, 'r.--')
+ax.tick_params('both', which = 'both', direction = 'inout')
+ax.plot(0, 1, 'k^', transform = ax.get_xaxis_transform(), clip_on = False)
+ax.plot(1, 0, 'k>', transform = ax.get_yaxis_transform(), clip_on = False)
 
 
 # %%
