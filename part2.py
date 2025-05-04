@@ -128,4 +128,28 @@ ax.tick_params('both', direction = 'inout', color = 'r', labelsize = 5, labelcol
 
 fig.savefig('gene2/axes components.png')
 
+# %% Patch and Path
+
+line_path = mpath.Path([(0, 0), (2, 1), (3, 0), (4, 3.5), (5, 7), (6, 2), (7, 4)])
+line_patch = mpathces.PathPatch(line_path, edgecolor = 'k', 
+    facecolor = (.9, .9, .9), linewidth = 2, linestyle = '--')
+
+fig = plt.figure(figsize = (3, 3))
+ax = plt.subplot()
+ax.set_xlim(-1, 10)
+ax.set_ylim(-1, 10)
+
+path_collection = mcollections.PathCollection([mpath.Path.circle((0, 0), 1)]*20, sizes = [50]*20,
+    edgecolor = 'k', facecolor = 'r', offsets = np.random.rand(20, 2)*10, 
+    linestyle = '--', linewidth = 2, 
+    offset_transform = ax.transData, transform = mtransforms.IdentityTransform())
+ax.minorticks_on()
+ax.tick_params(axis = 'both', which = 'minor', width = 1, color = 'r')
+ax.tick_params(axis = 'both', which = 'major', width = 4, color = 'r')
+
+ax.add_artist(line_patch)
+ax.add_artist(path_collection)
+fig.savefig('gene2/all_patches.png', transparent=False)
+
+
 # %%
