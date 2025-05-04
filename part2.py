@@ -1,7 +1,7 @@
 # %% Imports
 
 import numpy as np
-from matplotlib import pyplot as plt, ticker as mticker, gridspec as mgridspec
+from matplotlib import pyplot as plt, ticker as mticker, gridspec as mgridspec, path as mpath, patches as mpathces, collections as mcollections, transforms as mtransforms
 from pathlib import Path
 import colorsys
 import os
