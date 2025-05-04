@@ -151,5 +151,31 @@ ax.add_artist(line_patch)
 ax.add_artist(path_collection)
 fig.savefig('gene2/all_patches.png', transparent=False)
 
+# %% Figure only
+
+fig = plt.figure(figsize=(4, 4))
+line_path = mpath.Path([(0.1, 0.1), (.2, .1), (.3, 0), (.4, 0.35), (.5, .7), (.6, .2), (.7, .4)])
+line_patch = mpathces.PathPatch(line_path, edgecolor = 'k', 
+    facecolor = (.9, .9, .9), linewidth = 2, linestyle = '--')
+fig.add_artist(line_patch)
+
+path_collection = mcollections.PathCollection([mpath.Path.circle((0, 0), 1)]*20, sizes = [50]*20,
+    edgecolor = 'k', facecolor = 'r', offsets = np.random.rand(20, 2), 
+    linestyle = '--', linewidth = 2, 
+    offset_transform = fig.transFigure, transform = mtransforms.IdentityTransform())
+fig.add_artist(path_collection)
+
+x = plt.Line2D([0, 1], [0.5, 0.5], color = 'k')
+y = plt.Line2D([0.5, 0.5], [0, 1], color = 'k')
+fig.add_artist(x)
+fig.add_artist(y)
+x_arrow = plt.Line2D([1], [0.5], marker = '>', color = 'k', markersize = 10)
+fig.add_artist(x_arrow)
+y_arrow = plt.Line2D([0.5], [1], marker = '^', color = 'k', markersize = 10)
+fig.add_artist(y_arrow)
+
+fig.savefig('gene2/fig only.png', transparent=False)
+
+
 
 # %%
