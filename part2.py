@@ -190,6 +190,17 @@ scatter = ax.scatter(*data2.T)
 bars = ax.barh(data2[:, 0], data[:, 1], facecolor = (.8, .8, .8), edgecolor = 'k')
     # 返回Rectangle的列表(类似列表), 显然, 显然bar确实是一个rectangle
 
+# %% plot and scatter functions
+
+fig = plt.figure(figsize = (2, 2))
+plt.plot(*np.random.rand(2, 10),
+    color = 'r', marker = 'o', linestyle = '--', linewidth = 1.5,
+    markeredgewidth = 1, markersize = 10, markeredgecolor = 'k', markerfacecolor = 'g')
+
+fig = plt.figure(figsize = (2, 2))
+plt.scatter(*np.random.rand(2, 10), s = 100, facecolor = 'r', edgecolor = 'k', linestyle = '--', 
+    marker = 'v')
+
 
 
 # %%
