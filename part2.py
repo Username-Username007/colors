@@ -201,6 +201,42 @@ fig = plt.figure(figsize = (2, 2))
 plt.scatter(*np.random.rand(2, 10), s = 100, facecolor = 'r', edgecolor = 'k', linestyle = '--', 
     marker = 'v')
 
+# %% Text demo
+
+fig = plt.figure(figsize = (2, 2), dpi = 300)
+ax = plt.subplot()
+
+ax.text(.5, .5, "Hello你好", ha = 'center', va = 'center', size = 20, 
+    rotation = 45, weight = 'bold')
+ax.text(.5, .5, "Hello你好", ha = 'center', va = 'top', size = 20, 
+    rotation = 45, weight = 'ultralight', 
+    bbox = dict(facecolor = (.95,)*3, edgecolor = 'r', ls = '--'), 
+    zorder = 0, fontname = 'KaiTi')
+ax.text(.5, .5, "Hello你好", ha = 'center', va = 'bottom', size = 20, 
+    rotation = 45, weight = 'ultralight', 
+    bbox = dict(facecolor = (.95,)*3, edgecolor = 'r', ls = '--'), 
+    zorder = 0, fontname = ['Times New Roman','KaiTi'])
+
+plt.plot(0.5, 0.5, 'og', zorder = 3)
+
+# %% Text properties
+
+fig = plt.figure(figsize = (2, 2), dpi = 300)
+ax = plt.subplot()
+
+ax.text(.5, .5, "Hello你好", ha = 'center', va = 'center', size = 20, 
+    rotation = 45, weight = 'bold', clip_on = True)
+ax.text(.5, .5, "Hello你好", ha = 'center', va = 'top', size = 20, 
+    rotation = 45, weight = 'ultralight', 
+    bbox = dict(facecolor = (.95,)*3, edgecolor = 'r', ls = '--'), 
+    zorder = 0, fontname = 'KaiTi', clip_on = True)
+ax.text(.5, .5, R"Hello你好", ha = 'center', va = 'bottom', size = 20, 
+    rotation = 45, weight = 'ultralight', 
+    bbox = dict(facecolor = (.95,)*3, edgecolor = 'r', ls = '--'), 
+    zorder = 0, fontname = ['Times New Roman','KaiTi'], clip_on = True)
+ax.set_ylabel(R"$y$ Axis $\frac{a}{b^{2}}$")
+
+plt.plot(0.5, 0.5, 'og', zorder = 3)
 
 
 # %%
