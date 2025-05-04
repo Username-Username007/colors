@@ -237,6 +237,42 @@ ax.text(.5, .5, R"Hello你好", ha = 'center', va = 'bottom', size = 20,
 ax.set_ylabel(R"$y$ Axis $\frac{a}{b^{2}}$")
 
 plt.plot(0.5, 0.5, 'og', zorder = 3)
+# %% Axes properties 1
+
+fig = plt.figure(figsize = (4, 2), dpi = 300)
+ax = plt.subplot()
+
+x = np.linspace(0, 4*np.pi)
+y = np.sin(x)
+ax.plot(x, y, '--.')
+ax.set_xlabel('$x$ Axis', color = 'r', weight = 'bold')
+ax.set_xticks([0, 0.5*np.pi, np.pi, 1.5*np.pi, 2*np.pi, 3*np.pi, 4*np.pi], ['$0$', R'$\frac{1}{2}\pi$', R'$\pi$', R'$\frac{3}{2}\pi$', R'$2\pi$', R'$3\pi$', R'$4\pi$'], color = 'purple')
+ax.grid(True, ls = ':', c = (.9, .9, .9))
+ax.set_facecolor((.95, 1, .95))
+
+ax.tick_params('x', which='major', direction ='inout')
+ax.minorticks_on()
+ax.tick_params('both', which = 'minor', color = 'r', direction = 'inout')
+ax.grid(True, which = 'minor', color = (.95, .95, .95), ls = ':')
+
+# %% Axes properties 2
+
+fig = plt.figure(figsize = (4, 2), dpi = 300)
+ax = plt.subplot()
+
+x = np.linspace(-2*np.pi, 2*np.pi)
+ax.plot(x, np.sin(x), ':.')
+
+fig.set_facecolor('r')
+ax.set_facecolor('k')
+ax.spines[:].set_edgecolor('w')
+ax.spines[['right', 'top']].set_visible(False)
+ax.spines['left'].set_position(('data', 0))
+ax.spines['bottom'].set_position(('data', -1))
+ax.tick_params(axis = 'both', labelcolor = 'w', color = 'w', direction = 'inout')
+ax.set_ylabel('$y$', c = 'w')
+ax.xaxis.set_major_formatter(mticker.FuncFormatter(lambda x, pos: R"$%c\frac{%.0f}{2}\pi$" % ((['+', '+', '-'][int(np.sign(x))]),np.abs(x*2/np.pi)) ))
+
 
 
 # %%
