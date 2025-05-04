@@ -176,6 +176,20 @@ fig.add_artist(y_arrow)
 
 fig.savefig('gene2/fig only.png', transparent=False)
 
+# %% Axes introduced
+
+fig = plt.figure(figsize = (3, 3))
+data = np.array([(0, 0), (2, 1), (3, 0), (4, 3.5), (5, 7), (6, 2), (7, 4)])
+data2 = data + [1, -1]
+ax = plt.subplot()  
+    # 如果无Figure, 将自动创建Figure, 并且会创建GridSpec用于网格管理
+line, = ax.plot(data[:, 0], data[:, 1])
+    # 返回的line是创建的Line2D对象, 可以用它后续设置线条的参数, 如颜色, 虚线等
+scatter = ax.scatter(*data2.T)
+    # 返回的是PathCollection对象, 同样可以设置后续的参数
+bars = ax.barh(data2[:, 0], data[:, 1], facecolor = (.8, .8, .8), edgecolor = 'k')
+    # 返回Rectangle的列表(类似列表), 显然, 显然bar确实是一个rectangle
+
 
 
 # %%
