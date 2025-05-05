@@ -1,11 +1,13 @@
 # %% Imports
 
 import numpy as np
-from matplotlib import pyplot as plt, ticker as mticker, gridspec as mgridspec, path as mpath, patches as mpathces, collections as mcollections, transforms as mtransforms
+from matplotlib import pyplot as plt, ticker as mticker, gridspec as mgridspec, path as mpath, patches as mpathces, collections as mcollections, transforms as mtransforms, animation as manimation
 from pathlib import Path
 import colorsys
 import os
 import sys
+import pandas as pd
+import geopandas as gpd
 
 # %% Public sections
 
