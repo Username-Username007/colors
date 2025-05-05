@@ -355,4 +355,15 @@ plt.ylabel("Kinetic energy (J)")
 
 plt.savefig('gene2/pyplot only.png')
 
+# %% DPI transform
+
+fig = plt.figure(figsize = (6, 6))
+ax = plt.subplot(121)
+theta = np.linspace(0, 2*np.pi)
+x = np.cos(theta)
+y = np.sin(theta)
+ax.plot(x, y)
+fig.add_artist(plt.Line2D(x+5, y+1.5, transform = fig.dpi_scale_trans, zorder = 3))
+
+
 # %%
