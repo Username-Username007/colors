@@ -487,4 +487,24 @@ ax.set_title("imshow")
 
 fig.savefig('gene2/three image functions.png')
 
+# %% Surface rotation
+
+fps = 10
+duration = 10
+
+X, Y = np.meshgrid(np.linspace(-4, 4), np.linspace(-4, 4))
+Z = (X-2)**2 + (Y-1)**2 - 8
+
+fig = plt.figure(figsize = (3, 3))
+ax = plt.subplot(projection = '3d')
+surf = ax.plot_surface(X, Y, Z, cmap = 'bwr')
+ax.view_init(10, 0)
+ax.set_xlabel("X")
+
+def ani_fun(n):
+    ax.view_init(10, n/(fps*duration)*360)
+    return [surf]
+ani = manimation.FuncAnimation(fig, ani_fun, fps*duration, blit = True, repeat=True, interval = int(1e3/fps))
+ani.save('gene2/surface rotation.gif', fps = fps)
+
 # %%
