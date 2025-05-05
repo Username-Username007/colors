@@ -365,5 +365,94 @@ y = np.sin(theta)
 ax.plot(x, y)
 fig.add_artist(plt.Line2D(x+5, y+1.5, transform = fig.dpi_scale_trans, zorder = 3))
 
+# %% Layout
+
+def create_figure(layout = None):
+
+    fig = plt.figure(figsize = (4, 4), layout = layout)
+    axs = fig.subplot_mosaic("AA\nBC")
+    axs['A'].set_ylabel(R"$\frac{-b\pm\sqrt{b^2-4ac}}{2a}$")
+    axs['C'].set_ylabel(R"$x_1+x_2=-\frac{b}{a}$")
+    return fig
+
+with plt.rc_context():
+    plt.rcdefaults()    
+    fig = create_figure(None)
+    fig.savefig('gene2/no layout.png')
+
+    fig = create_figure('tight')
+    fig.savefig('gene2/tight layout.png')
+    fig.tight_layout()
+
+    fig = create_figure('constrained')
+    fig.savefig('gene2/constrained layout.png')
+
+def add_axes_border(fig, axes):
+    ax1 = axes[0, 1]
+    ax2 = axes[1, 1]
+    b1 = mtransforms.blended_transform_factory(ax1.transAxes, fig.transFigure)
+    b2 = mtransforms.blended_transform_factory(ax2.transAxes, fig.transFigure)
+
+    l1 = plt.Line2D([1, 1], [0, 1], transform = b1, c = 'r')
+    l2 = plt.Line2D([1, 1], [0, 1], transform = b2, c = 'r')
+    fig.add_artist(l1)
+    fig.add_artist(l2)
+
+fig_tight = plt.figure(figsize = (3, 3), layout = 'tight')
+axs = fig_tight.subplots(2, 2)
+im = axs[0, 1].imshow(np.random.rand(100, 100))
+fig_tight.colorbar(im, ax = axs[0, 1])
+fig_tight.suptitle("Tight layout")
+fig_tight.tight_layout()
+add_axes_border(fig_tight, axs)
+fig_tight.savefig('gene2/tight vs con 1.png')
+
+fig_con = plt.figure(figsize=(3, 3), layout = 'constrained')
+axs = fig_con.subplots(2, 2)
+im = axs[0, 1].imshow(np.random.rand(100, 100))
+fig_con.colorbar(im, ax = axs[0, 1])
+fig_con.suptitle("Constrained layout")
+fig_con.draw_without_rendering()
+add_axes_border(fig_con, axs)
+fig_con.savefig('gene2/tight vs con 2.png')
+
+# %% Layout and SubFigure
+
+fig = plt.figure(figsize = (3, 3), layout = 'constrained')
+axes = fig.subplots(2, 2)
+axes[0, 1].yaxis.tick_right()
+axes[0, 1].yaxis.set_label_position('right')
+axes[0, 1].set_ylabel(R"$\frac{-b\pm\sqrt{b^2-4ac}}{2a}$")
+fig.suptitle("No subfigure")
+add_axes_border(fig, axes)
+fig.savefig("gene2/sub figure 1.png", transparent=False)
+
+fig = plt.figure(figsize = (3, 3))
+subfigs = fig.subfigures(2, 2)
+fc = 'rgbm'
+for i in range(subfigs.size):
+    ax = subfigs.flat[i].add_subplot(111)
+    subfigs.flat[i].set_facecolor(fc[i])
+    if i == 1:
+        ax.yaxis.tick_right()
+        ax.yaxis.set_label_position('right')
+        ax.set_ylabel(R"$\frac{-b\pm\sqrt{b^2-4ac}}{2a}$")
+    if i == 1 or i == 3:
+        bt = mtransforms.blended_transform_factory(ax.transAxes, fig.transFigure)
+        l = plt.Line2D([1, 1], [0, 1], c = 'r', transform = bt)
+        fig.add_artist(l)
+fig.suptitle("All subfigure")
+fig.savefig("gene2/sub figure 2.png", transparent=False)
+
+fig = plt.figure(figsize = (3, 3))
+gs = mgridspec.GridSpec(2, 2, fig)
+ax = fig.add_subplot(gs[0, 1])
+ax.yaxis.tick_right()
+ax.yaxis.set_label_position('right')
+ax.set_ylabel(R"$\frac{-b\pm\sqrt{b^2-4ac}}{2a}$")
+subfig = fig.add_subfigure(gs[1,1], facecolor = 'r')
+fig.suptitle("Subplot vs subfigure")
+subfig = fig.add_subfigure(gs[:, 0], facecolor = 'b')
+fig.savefig("gene2/sub figure 3.png", transparent=False)
 
 # %%
