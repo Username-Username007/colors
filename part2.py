@@ -507,4 +507,29 @@ def ani_fun(n):
 ani = manimation.FuncAnimation(fig, ani_fun, fps*duration, blit = True, repeat=True, interval = int(1e3/fps))
 ani.save('gene2/surface rotation.gif', fps = fps)
 
+# %% ij and xy
+
+X, Y = np.meshgrid(np.linspace(-4, 4), np.linspace(-4, 4))
+Z = (X-2)**2 + (Y-1)**2 - 8
+
+fig = plt.figure(figsize = (6, 3))
+ax = plt.subplot(121)
+ax.pcolormesh(X, Y, Z, cmap = 'bwr')
+ax.set_title("pcolormesh")
+ax = plt.subplot(122)
+ax.imshow(Z, cmap = 'bwr', extent = (X.min(), X.max(), Y.min(), Y.max()))
+ax.set_aspect('auto')
+ax.set_title("imshow")
+
+fig = plt.figure(figsize = (3, 3))
+ax = plt.subplot()
+ax.imshow(np.random.rand(10, 100), cmap = 'bwr')
+ax.set_xlabel("Width (j)")
+ax.set_ylabel("Height (i)")
+ax.set_aspect('auto')
+t = mtransforms.blended_transform_factory(fig.transFigure, ax.transData)
+ax.annotate('Antarctic or Arctic?', (1, 0), (0.1, -0.1), ax.get_yaxis_transform(), 'offset fontsize', va = 'top', ha = 'left')
+fig.add_artist(plt.Line2D([0, 1], [0, 0], c='k', lw = 2, transform = t))
+fig.savefig("gene2/row.png")
+
 # %%
