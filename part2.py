@@ -532,4 +532,18 @@ ax.annotate('Antarctic or Arctic?', (1, 0), (0.1, -0.1), ax.get_yaxis_transform(
 fig.add_artist(plt.Line2D([0, 1], [0, 0], c='k', lw = 2, transform = t))
 fig.savefig("gene2/row.png")
 
+# %% Image transpose
+
+lon = np.arange(-180, 180)
+lat = np.arange(-90, 90)
+LON, LAT = np.meshgrid(lon, lat)
+print("LON的尺寸",LON.shape)
+temperature = -60/90*np.abs(LAT) + 40
+plt.pcolormesh(LON, LAT, temperature, cmap = 'bwr')
+plt.colorbar(label = R"Temperature ($\degree$C)")
+plt.xlabel("Longitude")
+plt.ylabel("Latitude")
+border = gpd.read_file('data/continent.kmz')
+border.plot(ax = plt.gca(), facecolor = 'none', edgecolor = 'k');
+
 # %%
