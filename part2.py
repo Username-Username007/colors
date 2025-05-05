@@ -333,4 +333,26 @@ ax.plot(0, 1, 'k^', transform = ax.get_xaxis_transform(), clip_on = False)
 ax.plot(1, 0, 'k>', transform = ax.get_yaxis_transform(), clip_on = False)
 
 
+# %% 半道插入: pyplot demo
+
+fig = plt.figure(figsize = (3, 3))
+ax = plt.subplot(111)
+    # The above is unnecessary becuase all functions in pyplot module will create the figure and axes automatically if they do not exist.
+x = np.linspace(-3, 3, 30)
+y = 4*x**2 - 10 + np.random.rand(x.size)*6
+    # ↑ data generation
+p = np.polyfit(x, y, 2)
+
+plt.scatter(x, y, marker = 'o', c = 'r')
+plt.plot(x, np.polyval(p, x), 'b-')
+xx = np.linspace(x.min(), x.max(), 100)
+yy = np.polyval(p, xx)
+plt.fill_between(xx, 0*xx, yy, alpha = 0.3, where = yy>=0)
+plt.fill_between(xx, 0*xx, yy, alpha = 0.3, where = yy<=0, color = 'r')
+
+plt.xlabel("Acceleration (m/s$^2$)")
+plt.ylabel("Kinetic energy (J)")
+
+plt.savefig('gene2/pyplot only.png')
+
 # %%
