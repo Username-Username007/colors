@@ -455,4 +455,34 @@ fig.suptitle("Subplot vs subfigure")
 subfig = fig.add_subfigure(gs[:, 0], facecolor = 'b')
 fig.savefig("gene2/sub figure 3.png", transparent=False)
 
+# %% Images : three functions and upside down
+
+df = pd.read_excel("data/ocean_temperature.xlsx", index_col=0)
+lon = np.array(df.columns)
+lat = np.array(df.index)
+data = df.to_numpy()
+border = gpd.read_file('data/continent.kmz')
+
+fig = plt.figure(figsize = (10, 3))
+
+ax = plt.subplot(131)
+ax.pcolormesh(lon, lat, data)
+border.plot(ax = ax, facecolor = 'none', edgecolor = 'k', lw = 1)
+ax.set_title("pcolormesh")
+ax.set_aspect('auto')
+
+ax = plt.subplot(132)
+ax.text(.5, .5, 'Never use "pcolor".\nIt is way too slow.', ha = 'center', va = 'center', color = (.7, .7, .7), bbox=dict(facecolor = 'w'))
+border.plot(ax = ax, facecolor = 'none', edgecolor = 'k', lw = 1)
+ax.set_aspect('auto')
+ax.set_title("pcolor")
+
+ax = plt.subplot(133)
+ax.imshow(data, extent=(lon.min(), lon.max(), lat.min(), lat.max()))
+border.plot(ax = ax, facecolor = 'none', edgecolor = 'k', lw = 1)
+ax.set_aspect('auto')
+ax.set_title("imshow")
+
+fig.savefig('gene2/three image functions.png')
+
 # %%
