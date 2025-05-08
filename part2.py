@@ -548,4 +548,90 @@ plt.ylabel("Latitude")
 border = gpd.read_file('data/continent.kmz')
 border.plot(ax = plt.gca(), facecolor = 'none', edgecolor = 'k');
 
+# %% 3D
+
+fps = 10
+duration = 10
+X, Y = np.meshgrid(np.linspace(-1, 1, 201), np.linspace(-1, 1, 201))
+Z = np.sin(((X*12)**2+(12*Y)**2)**0.5)
+theta = np.linspace(0, 2*np.pi, 8)
+r = 5*np.pi/2/12
+x, y = r*np.cos(theta), r*np.sin(theta)
+
+fig = plt.figure()
+ax = plt.subplot(projection = '3d')
+ax:mplot3d.Axes3D
+ax.scatter3D(x, y, x/x+0.5, zorder = 4, alpha = 1, c = 'k', s = 100)
+surf = ax.plot_surface(X, Y, Z, cmap = 'bwr', zorder = 2)
+
+def ani_fun(n):
+    ax.view_init(70/2*np.sin(2*np.pi/(1/3*duration*fps)*n)+70/2, n/fps/duration*360)
+    return [surf]
+ani = manimation.FuncAnimation(fig, ani_fun, fps*duration, blit=True, repeat=True, interval=int(1e3/fps))
+ani.save('gene2/3d plot.gif', fps = fps)
+
+# %% 3D - 2
+
+fig = plt.figure(figsize = (3, 3))
+ax = plt.subplot(projection = '3d')
+X, Y = np.meshgrid(np.linspace(-1, 1, 201), np.linspace(-1, 1, 201))
+Z1 = X+Y
+Z2 = X-Y
+Z3 = 0.5*X+Y
+surf1 =  ax.plot_surface(X, Y, Z1)
+surf2 = ax.plot_surface(X, Y, Z2)
+surf3 = ax.plot_surface(X, Y, Z3)
+
+def ani_fun(n):
+    ax.view_init(20, n/fps/duration*360)
+    return [surf1, surf2, surf3]
+ani = manimation.FuncAnimation(fig, ani_fun, fps*duration, blit=True, repeat=True, interval=int(1e3/fps))
+ani.save('gene2/3d plot clitch.gif', fps = fps)
+
+# %% 2D replaces 3D
+
+X, Y = np.meshgrid(np.linspace(-1, 1, 10), np.linspace(-1, 1, 10))
+Z = X**2+Y/3
+
+fig = plt.figure(figsize = (4, 3))
+ax:plt.Axes = plt.subplot(121)
+cycle = cycler(ls = ['--', ':', '-', '-.']) * cycler(marker = '*v^o><')
+cycle = cycle[:X.shape[1]] + cycler(color = [(0.5, 0.5, b) for b in np.linspace(0, 1, X.shape[1])])
+ax.set_prop_cycle(cycle)
+lines = ax.plot(X[0], Z.T);
+ax.set_ylabel('$z$')
+ax.set_xlabel('$x$')
+
+ax = plt.subplot(122)
+pm = ax.pcolormesh(X, Y, Z, cmap = 'bwr');
+ax.set_xlabel('$x$')
+ax.set_ylabel('$y$')
+fig.colorbar(pm, ax = ax, label = '$z$')
+fig.legend(lines, [f"{y:.2f}" for y in Y[:, 0]], loc = 'outside lower center', ncols = 4, title = '$y=$')
+fig.savefig('gene2/2d replaces 3d.png', transparent=False)
+
+# %% 2D replaces 3D - 2
+
+X, Y = np.meshgrid(np.linspace(-1, 1, 20), np.linspace(-1, 1, 20))
+Z = np.sin(((X*12)**2+(12*Y)**2)**0.5)
+
+fig = plt.figure(figsize = (4, 3))
+ax:plt.Axes = plt.subplot(121)
+cycle = cycler(ls = ['--', ':', '-', '-.']) * cycler(marker = '*v^o><')
+cycle = cycle[:X.shape[1]] + cycler(color = [(0.5, 0.5, b) for b in np.linspace(0, 1, X.shape[1])])
+ax.set_prop_cycle(cycle)
+lines = ax.plot(X[0], Z.T);
+ax.set_ylabel('$z$')
+ax.set_xlabel('$x$')
+
+X, Y = np.meshgrid(np.linspace(-1, 1, 201), np.linspace(-1, 1, 201))
+Z = np.sin(((X*12)**2+(12*Y)**2)**0.5)
+ax = plt.subplot(122)
+pm = ax.pcolormesh(X, Y, Z, cmap = 'bwr');
+ax.set_xlabel('$x$')
+ax.set_ylabel('$y$')
+fig.colorbar(pm, ax = ax, label = '$z$')
+fig.legend(lines, [f"{y:.2f}" for y in Y[:, 0]], loc = 'outside lower center', ncols = 4, title = '$y=$')
+fig.savefig('gene2/2d replaces 3d.png', transparent=False)
+
 # %%
